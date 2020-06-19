@@ -1,26 +1,48 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { Component } from 'react';
 import './App.css';
+import routes from './Route';
+import { BrowserRouter as Router } from "react-router-dom";
+import CarContext from './contexts/CartContext';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      cart: []
+    };
+    this.addCart = this.addCart.bind(this);
+  }
+  componentDidMount(){
+    const cart = JSON.parse(localStorage.getItem('cart'));
+    if(cart){
+      this.setState({
+        cart: [...cart]
+      });
+    }
+  }
+
+  addCart(e){
+    const book = JSON.parse(e.target.dataset.book);
+    console.log(book);
+    const {cart} = this.state;
+    const newCart = cart.length > 0 ? [...cart, book] : [book];
+    this.setState({
+      cart: newCart
+    });
+    localStorage.setItem('cart', JSON.stringify(newCart));
+  }
+
+  render() {
+    const {cart} = this.state;
+    console.log(cart);
+    return (
+      <CarContext.Provider value={{cart:cart, addCart:this.addCart}}>
+        <Router>
+          {routes}
+        </Router>
+      </CarContext.Provider>
+    );
+  }
 }
 
 export default App;
