@@ -5,7 +5,7 @@ import {
     UncontrolledDropdown, DropdownToggle, DropdownMenu, DropdownItem
   } from 'reactstrap';
 import { Link } from "react-router-dom";
-import CarContext from '../../../contexts/CartContext';
+import {CarContext} from '../../../contexts/CartContext';
 
 class NavBar extends Component{
     constructor(props){
@@ -26,14 +26,14 @@ class NavBar extends Component{
           <Navbar color="light" light expand="md">
               <Nav className="ml-auto" navbar>
                 <UncontrolledDropdown setActiveFromChild>
-                    <DropdownToggle tag="a" className="nav-link" caret>
                     <CarContext.Consumer>
                     {
-                      (data) => <span> { data.cart.length }</span>
+                    (data) =>
+                      <DropdownToggle tag="a" className="nav-link" caret>
+                        Cart ({ data.cart.length })
+                      </DropdownToggle>
                     }
                   </CarContext.Consumer>
-                      Cart
-                    </DropdownToggle>
                   <DropdownMenu>
                   <CarContext.Consumer>
                   {

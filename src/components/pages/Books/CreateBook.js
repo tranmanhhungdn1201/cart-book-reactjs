@@ -7,6 +7,7 @@ class CreateBook extends Component {
     super(props);
     this.state = {
       title: '',
+      type: '',
       description: '',
       fileImage: {},
       errorTitle: '',
@@ -20,15 +21,20 @@ class CreateBook extends Component {
   }
 
   validateForm(){
-    const {title, description, fileImage} = this.state;
+    const {title, description, fileImage, type} = this.state;
     let errors = {
       errorTitle: '',
+      errorType: '',
       errorDescription: '',
       errorFileImage: '',
     };
     let isError = false;
     if(!title.trim()){
       errors.errorTitle = 'Title required.';
+      isError = true;
+    }
+    if(!type.trim()){
+      errors.errorType = 'Type required.';
       isError = true;
     }
     if(!description.trim()){
@@ -49,6 +55,7 @@ class CreateBook extends Component {
     const target = event.target;
     const name = target.name;
     const value = target.value;
+    console.log(value);
     this.setState({
       [name]: value
     });
@@ -70,6 +77,7 @@ class CreateBook extends Component {
       data.append('description', this.state.description);
       data.append('photo', this.state.fileImage);
       data.append('title', this.state.title);
+      data.append('type', this.state.type);
       book.create(data).then(success => {
         if(success) {
           this.props.history.push('/');
@@ -79,7 +87,7 @@ class CreateBook extends Component {
   }
 
   render(){
-    const {errorTitle, errorDescription, errorFileImage } = this.state;
+    const {errorTitle, errorDescription, errorFileImage, errorType } = this.state;
     return (
       <Container>
         <h1 className="text-center">Create Book</h1>
@@ -88,6 +96,16 @@ class CreateBook extends Component {
             <Label for="title">Title</Label>
             <Input type="text" id="title" name="title" onChange={this.handleInputChange}/>
             <p className="text-danger">{ errorTitle }</p>
+          </FormGroup>
+          <FormGroup>
+            <Label for="type" sm={2}>Type</Label>
+              <Input type="select" name="type" id="type" placeholder="Type" onChange={ this.handleInputChange }>
+                <option value="1">Magazine</option>
+                <option value="2">Dictionary</option>
+                <option value="3">Novel</option>
+                <option value="4">Comic</option>
+              </Input>
+              <p className="text-danger">{ errorType }</p>
           </FormGroup>
           <FormGroup>
             <Label for="description">Description</Label>
